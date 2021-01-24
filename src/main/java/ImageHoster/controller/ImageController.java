@@ -50,6 +50,7 @@ public class ImageController {
         Image image = imageService.getImage(imageId); //Implementing Solution for PartA bugfix problem of the project to view the image without having a title conflict
         model.addAttribute("image", image);
         model.addAttribute("tags", image.getTags());
+        model.addAttribute("comments", image.getComments());
         return "images/image";
     }
 
@@ -97,6 +98,7 @@ public class ImageController {
         String tags = convertTagsToString(image.getTags());
         model.addAttribute("image", image);
         model.addAttribute("tags", tags);
+        model.addAttribute("comments", image.getComments());
         //Implementing soultion for Part A Bug Fix issue 2: Only owner of image can edit/delete and image
         User user = (User)session.getAttribute("loggeduser");
         if(image.getUser().getId() != user.getId()){
