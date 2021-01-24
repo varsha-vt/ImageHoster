@@ -100,8 +100,8 @@ public class ImageController {
         //Implementing soultion for Part A Bug Fix issue 2: Only owner of image can edit/delete and image
         User user = (User)session.getAttribute("loggeduser");
         if(image.getUser().getId() != user.getId()){
-            String errorMessage = "Only the owner of the image can edit the image";
-            model.addAttribute("editError",errorMessage);
+            String error = "Only the owner of the image can edit the image";
+            model.addAttribute("editError",error);
             model.addAttribute("tags",image.getTags());
             return "images/image";
         }
@@ -153,8 +153,8 @@ public class ImageController {
         User user = (User) session.getAttribute("loggeduser");
         if( image.getUser().getId()!=user.getId() ) {
             model.addAttribute("image", image);
-            String errorMessage = "Only the owner of the image can edit the image";
-            model.addAttribute("deleteError", errorMessage);
+            String error = "Only the owner of the image can edit the image";
+            model.addAttribute("deleteError", error);
             model.addAttribute("tags", image.getTags());
             return "images/image";
         }
