@@ -92,12 +92,19 @@ public class ImageController {
     //The method first needs to convert the list of all the tags to a string containing all the tags separated by a comma and then add this string in a Model type object
     //This string is then displayed by 'edit.html' file as previous tags of an image
     @RequestMapping(value = "/editImage")
-    public String editImage(@RequestParam("imageId") Integer imageId, Model model) {
+    public String editImage(@RequestParam("imageId") Integer imageId, Model model, HttpSession session) {
         Image image = imageService.getImage(imageId);
-
         String tags = convertTagsToString(image.getTags());
         model.addAttribute("image", image);
         model.addAttribute("tags", tags);
+        //Implementing soultion for Part A Bug Fix issue 2: Only owner of image can edit/delete and image
+        User user = (User)session.getAttribute("loggeduser");
+        if(image.getUser().getId() != user.getId()){
+            String errorMessage = "Only the owner of the image can edit the image";
+            model.addAttribute("editError",errorMessage);
+            model.addAttribute("tags",image.getTags());
+            return "images/image";
+        }
         return "images/edit";
     }
 
@@ -140,7 +147,17 @@ public class ImageController {
     //The method calls the deleteImage() method in the business logic passing the id of the image to be deleted
     //Looks for a controller method with request mapping of type '/images'
     @RequestMapping(value = "/deleteImage", method = RequestMethod.DELETE)
-    public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId) {
+    public String deleteImageSubmit(@RequestParam(name = "imageId") Integer imageId, Model model, HttpSession session) {
+        //Implementing soultion for Part A Bug Fix issue 2: Only owner of image can edit/delete and image
+        Image image = imageService.getImage(imageId);
+        User user = (User) session.getAttribute("loggeduser");
+        if( image.getUser().getId()!=user.getId() ) {
+            model.addAttribute("image", image);
+            String errorMessage = "Only the owner of the image can edit the image";
+            model.addAttribute("deleteError", errorMessage);
+            model.addAttribute("tags", image.getTags());
+            return "images/image";
+        }
         imageService.deleteImage(imageId);
         return "redirect:/images";
     }
