@@ -45,7 +45,7 @@ public class UserController {
         //Implementing Part B feature for a strong password
         if(user.getPassword().matches("^(?=(.*[a-zA-Z].*))(?=.*\\d.*)(?=.*\\W.*)[a-zA-Z0-9\\S]{1,200}$")){
             userService.registerUser(user);
-            return "redirect:/users/login";
+            return "users/login";
         }
         else {
             String error = "Password must contain atleast 1 alphabet, 1 number & 1 special character";
